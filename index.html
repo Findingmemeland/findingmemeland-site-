@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finding Memeland — An AI hides its treasure. First to find it gets paid.</title>
+<meta name="description" content="Finding Memeland is an AI-run treasure hunt on Base. An autonomous agent buries its treasure behind a secret X account and drops clues. The first hunter to find it claims the bounty in $FIND.">
+<meta property="og:title" content="Finding Memeland — X marks the bag">
+<meta property="og:description" content="An AI hides its treasure. You hunt. First to find it gets paid. AI-run treasure hunts on Base.">
+<meta property="og:image" content="banner.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="avatar.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Nunito:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0b0d10;
+    --black-2:#11141a;
+    --ink:#1a1006;
+    --parchment:#ead9b0;
+    --parchment-2:#e0cb98;
+    --parchment-dark:#c9b075;
+    --gold:#e0a93e;
+    --gold-2:#f5c860;
+    --green:#8fbf45;
+    --green-2:#a8d85a;
+    --red:#b5402a;
+    --rope:#a98a4f;
+    --muted:#9aa3ad;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--black);
+    color:var(--parchment);
+    font-family:'Nunito',sans-serif;
+    line-height:1.65;
+    overflow-x:hidden;
+  }
+  /* dark stormy texture */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% -8%, rgba(143,191,69,.10), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 85% 100%, rgba(224,169,62,.06), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 24px}
+  h1,h2,h3.pirata,.btn,.brand-name{font-family:'Pirata One',cursive;font-weight:400;letter-spacing:1px}
+
+  /* nav */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--parchment)}
+  .brand img{width:44px;height:44px;border-radius:50%;border:2px solid var(--gold)}
+  .brand-name{font-size:1.5rem;color:var(--parchment)}
+  .brand-name span{color:var(--gold)}
+  .nav-links{display:flex;gap:10px;align-items:center}
+  .nav-a{color:var(--parchment);text-decoration:none;font-size:.85rem;font-weight:700;opacity:.85;padding:6px 10px}
+  .nav-a:hover{color:var(--gold-2);opacity:1}
+  .nav-x{text-decoration:none;font-weight:800;font-size:.85rem;color:var(--black);background:var(--gold);padding:8px 16px;border-radius:8px;border:2px solid #00000055;box-shadow:0 3px 0 #00000066}
+  .nav-x:hover{background:var(--gold-2)}
+  @media(max-width:640px){.nav-a{display:none}}
+
+  /* hero */
+  header{text-align:center;padding:34px 0 50px}
+  .banner{max-width:680px;width:100%;margin:0 auto 6px;display:block;border-radius:10px;border:1px solid #2a2f38;box-shadow:0 10px 40px #000c}
+  .avatar{width:240px;height:240px;margin:-46px auto 6px;border-radius:50%;display:block;
+    filter:drop-shadow(0 0 36px rgba(143,191,69,.35));
+    animation:bob 5s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+  .tagline{font-family:'Pirata One',cursive;font-size:clamp(1.7rem,5vw,2.7rem);line-height:1.15;color:var(--parchment);margin:10px auto 4px;max-width:700px}
+  .tagline .gold{color:var(--gold-2)}
+  .tagline .green{color:var(--green-2)}
+  .sub-tag{color:var(--muted);max-width:580px;margin:12px auto 0;font-size:1.02rem}
+  .sub-tag b{color:var(--parchment)}
+  .badges{display:flex;gap:10px;justify-content:center;margin:24px 0 0;flex-wrap:wrap;font-size:.78rem;font-weight:800;letter-spacing:.5px}
+  .badge{border:1px dashed var(--rope);border-radius:999px;padding:5px 16px;color:var(--rope);text-transform:uppercase}
+  .badge.live{color:var(--green-2);border-color:var(--green)}
+  .ctas{display:flex;gap:16px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+  .btn{display:inline-block;text-decoration:none;font-size:1.25rem;padding:13px 30px;border-radius:10px;transition:.15s;border:2px solid #00000088}
+  .btn-gold{background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#2a1a05;box-shadow:0 5px 0 #5e431a,0 10px 30px #0009}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 7px 0 #5e431a,0 14px 34px #000a}
+  .btn-dark{background:#181c23;color:var(--parchment);border-color:#2c323d;box-shadow:0 5px 0 #00000088}
+  .btn-dark:hover{color:var(--gold-2);transform:translateY(-2px)}
+
+  /* sections */
+  section{padding:58px 0;border-top:2px dashed #232833}
+  h2{font-size:clamp(1.8rem,4vw,2.4rem);color:var(--gold);margin-bottom:6px}
+  h2 .skull{color:var(--parchment)}
+  .sub{color:var(--muted);margin-bottom:32px;max-width:640px;font-size:.98rem}
+
+  .legend p{max-width:720px;color:#c3cad2;margin-bottom:15px;font-size:1.02rem}
+  .legend p b{color:var(--parchment)}
+  .legend .punch{color:var(--green-2);font-weight:800}
+
+  /* map steps */
+  .map{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:18px}
+  .step{background:linear-gradient(160deg,var(--parchment),var(--parchment-2) 70%,var(--parchment-dark));color:var(--ink);
+    border-radius:6px;padding:22px 18px 20px;position:relative;
+    box-shadow:0 8px 26px #000a, inset 0 0 40px #b3935544;
+    transform:rotate(-.7deg)}
+  .step:nth-child(2n){transform:rotate(.8deg)}
+  .step::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#888,#222);box-shadow:0 1px 3px #0008}
+  .step .n{font-family:'Pirata One',cursive;font-size:1.9rem;color:var(--red)}
+  .step h3{font-size:1.02rem;margin:6px 0 6px;font-weight:800}
+  .step p{font-size:.88rem;color:#42321a;line-height:1.5}
+  .step .x{position:absolute;bottom:8px;right:12px;font-family:'Pirata One',cursive;color:var(--red);opacity:.5;font-size:1.2rem}
+
+  /* pirate code */
+  .code-board{background:linear-gradient(160deg,#15181f,#101319);border:2px solid #262c37;border-radius:14px;padding:8px 26px;box-shadow:0 10px 30px #0009}
+  .code-item{display:flex;gap:16px;padding:20px 0;border-bottom:1px dashed #2a3140;align-items:flex-start}
+  .code-item:last-child{border-bottom:none}
+  .code-item .ico{font-size:1.5rem;line-height:1.2}
+  .code-item h3{color:var(--gold-2);font-size:1rem;font-weight:800;margin-bottom:3px}
+  .code-item p{color:var(--muted);font-size:.92rem}
+  .code-item p b{color:var(--parchment)}
+
+  /* cursed seal */
+  .seal{background:linear-gradient(135deg,rgba(143,191,69,.09),rgba(143,191,69,.02));border:2px solid #3c5520;border-radius:14px;padding:28px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+  .seal .lock{font-size:2.2rem}
+  .seal h3{color:var(--green-2);font-family:'Pirata One',cursive;font-size:1.5rem;margin-bottom:6px;letter-spacing:1px}
+  .seal p{color:var(--muted);font-size:.94rem;max-width:660px}
+  .seal p b{color:var(--parchment)}
+  .seal code{color:var(--green-2);background:rgba(143,191,69,.1);padding:2px 7px;border-radius:5px;font-size:.8rem}
+
+  /* faq */
+  .faq details{border:1px solid #262c37;border-radius:10px;margin-bottom:10px;background:var(--black-2)}
+  .faq summary{padding:16px 20px;cursor:pointer;font-weight:800;font-size:.97rem;list-style:none;display:flex;justify-content:space-between;align-items:center;color:var(--parchment)}
+  .faq summary::after{content:"☠";color:var(--gold);font-size:1.05rem;opacity:.7}
+  .faq details[open] summary::after{content:"⚓"}
+  .faq .a{padding:0 20px 18px;color:var(--muted);font-size:.92rem}
+  .faq .a b{color:var(--parchment)}
+
+  /* hire the crew */
+  .hire{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+  @media(max-width:760px){.hire{grid-template-columns:1fr}}
+  .hire-pitch p{color:#c3cad2;margin-bottom:14px;font-size:1rem}
+  .hire-pitch p b{color:var(--gold-2)}
+  .hire-pitch ul{list-style:none;margin:18px 0}
+  .hire-pitch li{padding:7px 0 7px 30px;position:relative;color:var(--muted);font-size:.95rem}
+  .hire-pitch li::before{content:"✗";position:absolute;left:4px;color:var(--red);font-weight:800}
+  .hire-pitch .mail{color:var(--gold-2);font-weight:800;text-decoration:none}
+  form{background:linear-gradient(160deg,var(--parchment),var(--parchment-2) 75%,var(--parchment-dark));
+    border-radius:8px;padding:28px;color:var(--ink);box-shadow:0 12px 36px #000b, inset 0 0 50px #b3935540;transform:rotate(.5deg)}
+  form h3{font-family:'Pirata One',cursive;font-size:1.6rem;color:var(--ink);margin-bottom:4px;letter-spacing:1px}
+  form .fsub{font-size:.85rem;color:#5d4a28;margin-bottom:18px}
+  label{display:block;font-weight:800;font-size:.8rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.5px;color:#42321a}
+  input,textarea,select{width:100%;padding:11px 12px;border-radius:6px;border:2px solid #8a734a;background:#f6ecd2;color:var(--ink);font-family:'Nunito',sans-serif;font-size:.95rem}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--red)}
+  textarea{min-height:110px;resize:vertical}
+  .send{margin-top:20px;width:100%;cursor:pointer;font-family:'Pirata One',cursive;font-size:1.3rem;letter-spacing:1px;
+    background:linear-gradient(180deg,#c8552f,var(--red));color:#ffe9d6;border:2px solid #00000066;border-radius:10px;padding:13px;
+    box-shadow:0 5px 0 #5e1f10;transition:.15s}
+  .send:hover{transform:translateY(-2px);box-shadow:0 7px 0 #5e1f10}
+
+  /* footer */
+  footer{border-top:2px dashed #232833;padding:38px 0 50px;font-size:.82rem;color:var(--muted)}
+  .warn{border:2px solid var(--red);background:rgba(181,64,42,.09);border-radius:10px;padding:16px 20px;margin-bottom:26px;color:#e8b3a3}
+  .warn b{color:#f5cabc}
+  .foot-links{display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap}
+  .foot-links a{color:var(--parchment);text-decoration:none;font-weight:700}
+  .foot-links a:hover{color:var(--gold-2)}
+  .fine{opacity:.7;max-width:760px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <a class="brand" href="#">
+    <img src="avatar.png" alt="Finding Memeland skull">
+    <span class="brand-name">Finding <span>Memeland</span></span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-a" href="#map">The Hunt</a>
+    <a class="nav-a" href="#code">The Code</a>
+    <a class="nav-a" href="#hire">Hire the Crew</a>
+    <a class="nav-x" href="https://x.com/FindingMemeland" target="_blank" rel="noopener">Follow on 𝕏</a>
+  </div>
+</nav>
+
+<header>
+  <img class="banner" src="banner.jpg" alt="Finding Memeland">
+  <img class="avatar" src="avatar.png" alt="The grinning skull of Memeland, magnifying glasses crossed like bones">
+  <h1 class="tagline">An AI buried its treasure somewhere on X.<br>
+  <span class="gold">First one to dig it up</span> <span class="green">gets paid.</span></h1>
+  <p class="sub-tag">A fully autonomous AI agent hides behind an X account and taunts you with clues. Find it before the other degenerates do, and the bounty in <b>$FIND</b> sails straight to your wallet. <b>On-chain. No mercy.</b></p>
+  <div class="badges">
+    <span class="badge live">⚓ Pre-launch — the ship is being loaded</span>
+    <span class="badge">Sailing on Base</span>
+    <span class="badge">$FIND — not live yet</span>
+  </div>
+  <div class="ctas">
+    <a class="btn btn-gold" href="https://x.com/FindingMemeland" target="_blank" rel="noopener">Join the hunt on 𝕏</a>
+    <a class="btn btn-dark" href="litepaper.pdf" target="_blank">Read the map (litepaper)</a>
+  </div>
+</header>
+
+<section class="legend" id="legend">
+  <h2><span class="skull">☠</span> The Legend</h2>
+  <p>Somewhere out on the open seas of X floats an account that isn't what it pretends to be. A niche meme page. Some hobbyist. A random anon with suspiciously good vibes. <b>One of them is our agent in disguise</b> — a brand-new, single-use identity it invented just for this hunt. It plays once, then never again — the wreck stays afloat as a trophy of the voyage.</p>
+  <p>The agent drops clues from <b>@FindingMemeland</b> — cryptic at first, then easier and easier, mocking you a little more each time, until somebody finally cracks it. No clue limit. <b>No pity for the slow.</b> (And if nobody cracks it in 72 hours, the impostor sails off with the treasure — back to the vault it goes.)</p>
+  <p class="punch">Find the impostor → grab the claim code off its profile → DM it with your wallet → treasure lands on-chain. First valid claim takes the whole bounty. Everyone else walks the plank.</p>
+</section>
+
+<section id="map">
+  <h2><span class="skull">🗺</span> The Treasure Map</h2>
+  <p class="sub">Every hunt is its own voyage, run bow-to-stern by the agent. Four marks on the map:</p>
+  <div class="map">
+    <div class="step"><div class="n">I.</div><h3>The Disguise</h3><p>The agent dresses a fresh X account with a made-up identity — name, face, bio, vibes. No human picks it. No human sees it.</p><span class="x">✗</span></div>
+    <div class="step"><div class="n">II.</div><h3>The Clues</h3><p>Clue 1 fires the starting cannon — reshare it or you're not in the race. New clues drop every 1–3 hours, each ~30% more obvious. And more insulting.</p><span class="x">✗</span></div>
+    <div class="step"><div class="n">III.</div><h3>The Chase</h3><p>Hunt solo, raid in crews, or unleash your own AI agent as a bloodhound. The impostor's profile hides the claim code. X marks the bag.</p><span class="x">✗</span></div>
+    <div class="step"><div class="n">IV.</div><h3>The Bounty</h3><p>DM @FindingMemeland the code + your wallet. First valid claim gets the $FIND treasure on-chain, instantly. The rest get a polite lol.</p><span class="x">✗</span></div>
+  </div>
+</section>
+
+<section id="code">
+  <h2><span class="skull">⚓</span> The Pirate Code</h2>
+  <p class="sub">Three articles. Break them and ye don't sail. Full code lives in the pinned post on X.</p>
+  <div class="code-board">
+    <div class="code-item"><div class="ico">💰</div><div>
+      <h3>Article I — Hold to win</h3>
+      <p>Only holders of $FIND can claim a bounty — held continuously for <b>24 hours</b> before you claim, proven on-chain to the block. Buying mid-hunt counts for nothing. Snipers get keelhauled.</p>
+    </div></div>
+    <div class="code-item"><div class="ico">📢</div><div>
+      <h3>Article II — Fly the flag</h3>
+      <p>Your X account must have reshared the current hunt's opening post (Clue 1). Every hunt is a fresh voyage — yesterday's flag won't board today's ship.</p>
+    </div></div>
+    <div class="code-item"><div class="ico">🤖</div><div>
+      <h3>Article III — Humans win, agents help</h3>
+      <p>Bring all the AI firepower you can build — scrapers, solvers, scoring bots. Encouraged, even. But the hand that claims the treasure must be human. <b>Self-declared bots and agents can't win.</b> Ever.</p>
+    </div></div>
+  </div>
+</section>
+
+<section id="fair">
+  <div class="seal">
+    <div class="lock">🔒</div>
+    <div>
+      <h3>The Cursed Seal — every hunt is provably honest</h3>
+      <p>Before the first clue drops, the agent burns an <b>integrity hash</b> into Clue 1 — <code>SHA-256(persona + claim code + salt)</code>. When the hunt ends, the ingredients are revealed and anyone can check the treasure never moved. Every submission is logged and auditable. The captain can't win, can't peek, can't redraw the map. <b>The curse binds the crew too.</b></p>
+      <p>Don't trust the captain — <a href="https://github.com/Findingmemeland/finding-memeland-agent" target="_blank" rel="noopener"><b>read the code</b></a>. The agent is open source.</p>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <h2><span class="skull">🦜</span> Parley (FAQ)</h2>
+  <details>
+    <summary>When does the ship sail?</summary>
+    <div class="a">Token launch date drops on <b>@FindingMemeland</b>. Hunt #1 fires <b>within the first week after launch</b> — exact date in the Genesis countdown. Hold for at least <b>24 hours</b> before it fires and you're eligible to win it. The countdown will be loud. Turn notifications on or get left at the docks.</div>
+  </details>
+  <details>
+    <summary>Can my AI agent play?</summary>
+    <div class="a">Your agent can hunt <b>for</b> you — scrape, analyse, rank suspects, whatever you can rig together. But the account that claims must be yours and human. Publicly-declared bots and agents are banned from winning. That's Article III, sailor.</div>
+  </details>
+  <details>
+    <summary>How do I know the captain isn't cheating?</summary>
+    <div class="a">The Cursed Seal: a published hash locks the target before any clue exists, the reveal lets anyone verify it, and every submission is logged and auditable. The captain and crew are <b>permanently ineligible</b>. Details in the litepaper.</div>
+  </details>
+  <details>
+    <summary>Where's the contract address?</summary>
+    <div class="a">Nowhere, yet. $FIND has not launched. The only real CA will be announced on <b>@FindingMemeland</b> — anything flying our skull before that is a scam ship. Sink it on sight.</div>
+  </details>
+</section>
+
+<section id="hire">
+  <h2><span class="skull">🏴‍☠️</span> Hire the Crew</h2>
+  <p class="sub">Launching a token? Shipping a product? Want a horde of treasure hunters obsessing over <b>your</b> brand for 24 hours straight?</p>
+  <div class="hire">
+    <div class="hire-pitch">
+      <p><b>We run hunts for hire.</b> Your project becomes the hidden treasure: our agent builds the hunt, our community does the digging, and your name is the answer everyone is desperately trying to find.</p>
+      <p>It's marketing, except people actually <i>want</i> to play it:</p>
+      <ul>
+        <li>A custom hunt themed around your project or product</li>
+        <li>Hours of sustained, obsessive attention from hunters and their AI agents</li>
+        <li>Every participant reshares the hunt — your campaign distributes itself</li>
+        <li>Run end-to-end by the agent, provably fair, on-chain payout</li>
+      </ul>
+      <p>Drop a message in the bottle, or write to <a class="mail" href="mailto:info@findingmemeland.com">info@findingmemeland.com</a>. We answer faster than we forgive.</p>
+    </div>
+    <form action="https://formsubmit.co/info@findingmemeland.com" method="POST">
+      <input type="hidden" name="_subject" value="🏴‍☠️ New hunt commission — findingmemeland.com">
+      <input type="hidden" name="_template" value="table">
+      <input type="text" name="_honey" style="display:none">
+      <h3>Message in a bottle</h3>
+      <p class="fsub">Tell us what treasure we're burying.</p>
+      <label for="f-name">Your name</label>
+      <input id="f-name" type="text" name="name" placeholder="Captain..." required>
+      <label for="f-email">Email</label>
+      <input id="f-email" type="email" name="email" placeholder="you@project.xyz" required>
+      <label for="f-project">Project / company</label>
+      <input id="f-project" type="text" name="project" placeholder="What are we hiding?" required>
+      <label for="f-type">What do you need?</label>
+      <select id="f-type" name="type">
+        <option>Launch a new token/project with a hunt</option>
+        <option>Promote an existing project/product</option>
+        <option>Something else entirely</option>
+      </select>
+      <label for="f-msg">The details</label>
+      <textarea id="f-msg" name="message" placeholder="Timeline, audience, what success looks like... or just say ahoy." required></textarea>
+      <button class="send" type="submit">⚓ Send the bottle</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="warn"><b>⚠️ Scam ships ahoy:</b> $FIND has not launched. The official contract address will be announced ONLY on <b>@FindingMemeland</b> on X. Any token wearing this name or skull before that announcement is fake. Don't get boarded.</div>
+  <div class="foot-links">
+    <a href="https://x.com/FindingMemeland" target="_blank" rel="noopener">𝕏 @FindingMemeland</a>
+    <a href="litepaper.pdf" target="_blank">Litepaper</a>
+    <a href="https://github.com/Findingmemeland/finding-memeland-agent" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:info@findingmemeland.com">info@findingmemeland.com</a>
+  </div>
+  <p class="fine">Finding Memeland is a skill-based game. $FIND is a utility token providing access to the game — nothing on this site is financial advice, an offer of securities, or a promise of returns. The sea is volatile; sail with what you can afford to lose. © 2026 Finding Memeland.</p>
+</footer>
+
+</div>
+</body>
+</html>
